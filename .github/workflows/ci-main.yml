@@ -9,7 +9,7 @@ env:
   NAMESPACE: charles0891
   IMAGE_NAME: kube-argocd-deploy
   PROJECT_VERSION: 0.0.1-SNAPSHOT
-  DOCKER_USER: ${{ secrets.DOCKERHUB_USERNAME }}
+  DOCKER_USER: ${{ github.actor }}
   DOCKER_PASS: ${{ secrets.DOCKERHUB_TOKEN }}
 
 jobs:
@@ -83,3 +83,14 @@ jobs:
 
       - name: Push to packages
         run: docker push ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{env.PROJECT_VERSION}}
+
+      - name: Update manifest file
+        run: |
+          # Assuming you have a manifest file named k8s.yaml
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com" 
+          yq eval '.spec.template.spec.containers[0].image = "${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{env.PROJECT_VERSION}}"' -i deployments/deployment.yml
+          
+          git add .
+          git commit -m "updating newer image"
+          git push --set-upstream origin main
