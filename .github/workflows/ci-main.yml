@@ -6,11 +6,11 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  NAMESPACE: charlie-services
+  NAMESPACE: charles0891
   IMAGE_NAME: kube-argocd-deploy
   PROJECT_VERSION: 0.0.1-SNAPSHOT
   #DOCKER_USER: ${{ secrets.DOCKERHUB_USERNAME }}
-  DOCKER_USER: charles1303
+  DOCKER_USER: charles0891
   DOCKER_PASS: ${{ secrets.DOCKERHUB_TOKEN }}
 
 jobs:
