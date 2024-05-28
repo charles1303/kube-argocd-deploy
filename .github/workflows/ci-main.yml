@@ -5,14 +5,14 @@ on:
     branches: [ "**" ]
 
 env:
-  REGISTRY: ghcr.io
-  NAMESPACE: charles0891
-  IMAGE_NAME: kube-argocd-deploy
-  PROJECT_VERSION: 0.0.1-SNAPSHOT
+  REGISTRY: 'ghcr.io'
+  NAMESPACE: 'charles0891'
+  IMAGE_NAME: 'kube-argocd-deploy'
+  PROJECT_VERSION: '0.0.1-SNAPSHOT'
   #DOCKER_USER: ${{ secrets.DOCKERHUB_USERNAME }}
-  DOCKER_USER: charles1303
-  DOCKER_PASS: dckr_pat_W0P-oD-d5bA-KynUB9LCkvx18Qg
-  CR_PAT: dckr_pat_W0P-oD-d5bA-KynUB9LCkvx18Qg
+  DOCKER_USER: 'charles1303'
+  DOCKER_PASS: 'dckr_pat_W0P-oD-d5bA-KynUB9LCkvx18Qg'
+  CR_PAT: 'dckr_pat_W0P-oD-d5bA-KynUB9LCkvx18Qg'
 
 jobs:
   unit-test:
