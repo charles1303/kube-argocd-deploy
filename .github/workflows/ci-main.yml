@@ -87,13 +87,13 @@ jobs:
       - name: Update manifest file
         run: |
           # Assuming you have a manifest file named k8s.yaml
-          git config user.name "$GITHUB_ACTOR"
-          git config user.email "$GITHUB_ACTOR@gmail.com"
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
           yq eval '.spec.template.spec.containers[0].image = "${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{env.PROJECT_VERSION}}"' -i deployments/deployment.yml
           
           git add .
           git commit -m "updating newer image"
-          git push --set-upstream origin master
+          git push --set-upstream origin main
       
 
 #      - name: Update manifest file
