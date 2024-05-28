@@ -9,7 +9,7 @@ env:
   NAMESPACE: charlie-services
   IMAGE_NAME: kube-argocd-deploy
   PROJECT_VERSION: 0.0.1-SNAPSHOT
-  DOCKER_USER: ${{ vars.DOCKERHUB_USERNAME }}
+  DOCKER_USER: ${{ secrets.DOCKERHUB_USERNAME }}
   DOCKER_PASS: ${{ secrets.DOCKERHUB_TOKEN }}
 
 jobs:
