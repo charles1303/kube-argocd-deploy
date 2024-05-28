@@ -71,10 +71,11 @@ jobs:
         run: ./mvnw package
 
       - name: Build Docker image
-        run: |
+        run: docker build -f src/main/docker/Dockerfile.jvm -t ${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:${{env.PROJECT_VERSION}} .
+#        run: |
 #          docker buildx create --use
 #          docker buildx inspect default --bootstrap
-          docker build -f src/main/docker/Dockerfile.jvm -t ${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:${{env.PROJECT_VERSION}} --load .
+#          docker buildx build -f src/main/docker/Dockerfile.jvm -t ${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:${{env.PROJECT_VERSION}} --load .
 
       - name: Display Docker images
         run: docker image ls
