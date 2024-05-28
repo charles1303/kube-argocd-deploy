@@ -41,7 +41,7 @@ jobs:
     outputs:
       project-version-output: ${{ steps.create-project-version.outputs.PROJECT_VERSION_OUTPUT }}
     permissions:
-      contents: write
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 21
@@ -98,6 +98,8 @@ jobs:
   update-image-tag-manifest:
     needs: [build]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - name: Update Manifest file
