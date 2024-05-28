@@ -89,7 +89,7 @@ jobs:
           # Assuming you have a manifest file named k8s.yaml
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
-          git remote set-url origin https://x-access-token:${env.DOCKER_PASS}@github.com/${github.repository_owner}/kube-argocd-deploy.git
+          git remote set-url origin https://x-access-token:${{env.DOCKER_PASS}}@github.com/${{github.repository_owner}}/kube-argocd-deploy.git
           yq eval '.spec.template.spec.containers[0].image = "${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{env.PROJECT_VERSION}}"' -i deployments/deployment.yml
 
           git add .
