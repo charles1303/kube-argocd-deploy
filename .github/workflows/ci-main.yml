@@ -10,9 +10,9 @@ env:
   IMAGE_NAME: kube-argocd-deploy
   PROJECT_VERSION: 0.0.1-SNAPSHOT
   #DOCKER_USER: ${{ secrets.DOCKERHUB_USERNAME }}
-  DOCKER_USER: charles1303
-  DOCKER_PASS: ${{ secrets.DOCKERHUB_TOKEN }}
-  CR_PAT: ${{ secrets.DOCKERHUB_TOKEN }}
+  DOCKER_USER: charles0891
+  DOCKER_PASS: dckr_pat_W0P-oD-d5bA-KynUB9LCkvx18Qg
+  CR_PAT: dckr_pat_W0P-oD-d5bA-KynUB9LCkvx18Qg
 
 jobs:
   unit-test:
@@ -49,8 +49,6 @@ jobs:
           echo ${{ env.DOCKER_USER }}
       - name: Login to docker
         run: echo ${{ env.CR_PAT }} | docker login -u ${{ env.DOCKER_USER }} --password-stdin ${{ env.REGISTRY }}
-      - name: Curl to docker url
-        run: curl -v -u ${{ env.DOCKER_USER}}:${{ env.DOCKER_PASS }} https://ghcr.io/v2/
 
 #  build:
 #    needs: unit-test
