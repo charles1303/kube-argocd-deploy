@@ -9,7 +9,8 @@ env:
   NAMESPACE: charlie-services
   IMAGE_NAME: kube-argocd-deploy
   PROJECT_VERSION: 0.0.1-SNAPSHOT
-  DOCKER_USER: ${{ secrets.DOCKERHUB_USERNAME }}
+  #DOCKER_USER: ${{ secrets.DOCKERHUB_USERNAME }}
+  DOCKER_USER: charles1303
   DOCKER_PASS: ${{ secrets.DOCKERHUB_TOKEN }}
 
 jobs:
@@ -35,10 +36,14 @@ jobs:
         uses: skjolber/maven-cache-github-action@v1
         with:
           step: save
+      - name: Print variables
+        run: |
+          echo ${{ env.DOCKER_PASS }}
+          echo ${{ env.DOCKER_USER }}
       - name: Login to docker
-        run: echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin ${{ env.REGISTRY }}
+        run: echo ${{ env.DOCKER_PASS }} | docker login -u ${{ env.DOCKER_USER }} --password-stdin ${{ env.REGISTRY }}
       - name: Curl to docker url
-        run: curl -v -u ${{ secrets.DOCKERHUB_TOKEN }}:${{ secrets.DOCKERHUB_USERNAME }} https://ghcr.io/v2/
+        run: curl -v -u ${{ env.DOCKER_USER}}:${{ env.DOCKER_PASS }} https://ghcr.io/v2/
 
 #  build:
 #    needs: unit-test
