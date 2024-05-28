@@ -49,12 +49,6 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-      - name: Log in to the Container registry
-        uses: docker/login-action@v3.1.0
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ env.DOCKER_USER }}
-          password: ${{ env.DOCKER_PASS }}
 
       - id: create-project-version
         run: |
@@ -70,6 +64,13 @@ jobs:
       - name: Build with Maven
         run: ./mvnw package
 
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3.1.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ env.DOCKER_USER }}
+          password: ${{ env.DOCKER_PASS }}
+
       - name: Build Docker image
         run: docker build -f src/main/docker/Dockerfile.jvm -t ${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:${{env.PROJECT_VERSION}} .
 #        run: |
@@ -81,4 +82,4 @@ jobs:
         run: docker image ls
 
       - name: Push to packages
-        run: docker push ${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:${{env.PROJECT_VERSION}}
+        run: docker push ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:${{env.PROJECT_VERSION}}
