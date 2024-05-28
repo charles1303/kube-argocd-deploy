@@ -84,16 +84,15 @@ jobs:
       - name: Push to packages
         run: docker push ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{env.PROJECT_VERSION}}
 
-      - name: Update manifest file
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           token: ${{ env.DOCKER_PASS }}
-        run: |
-          # Assuming you have a manifest file named k8s.yaml
-          git config user.name "${{ github.actor }}"
-          git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com" 
-          yq eval '.spec.template.spec.containers[0].image = "${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{env.PROJECT_VERSION}}"' -i deployments/deployment.yml
-          
-          git add .
-          git commit -m "updating newer image"
-          git push --set-upstream origin main
+      - run: |
+        # Assuming you have a manifest file named k8s.yaml
+         git config user.name "${{ github.actor }}"
+         git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com" 
+         yq eval '.spec.template.spec.containers[0].image = "${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{env.PROJECT_VERSION}}"' -i deployments/deployment.yml
+        
+         git add .
+         git commit -m "updating newer image"
+         git push --set-upstream origin main
