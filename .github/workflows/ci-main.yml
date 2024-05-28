@@ -84,10 +84,7 @@ jobs:
       - name: Push to packages
         run: docker push ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{env.PROJECT_VERSION}}
 
-      - name: Update manifest file
-        uses: actions/checkout@v4
-        with:
-          token: ${{ env.DOCKER_USER }}
+      - uses: actions/checkout@v4
         run: |
           # Assuming you have a manifest file named k8s.yaml
           git config user.name "$GITHUB_ACTOR"
