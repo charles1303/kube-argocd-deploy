@@ -11,7 +11,6 @@ env:
   PROJECT_VERSION: 0.0.1-SNAPSHOT
   DOCKER_USER: ${{ secrets.DOCKERHUB_USERNAME }}
   DOCKER_PASS: ${{ secrets.DOCKERHUB_TOKEN }}
-  CR_PAT: ${{ secrets.DOCKERHUB_TOKEN }}
 
 jobs:
   unit-test:
@@ -36,58 +35,45 @@ jobs:
         uses: skjolber/maven-cache-github-action@v1
         with:
           step: save
+  build:
+    needs: unit-test
+    runs-on: ubuntu-latest
+    outputs:
+      project-version-output: ${{ steps.create-project-version.outputs.PROJECT_VERSION_OUTPUT }}
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
       - name: Log in to the Container registry
         uses: docker/login-action@v3.1.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ env.DOCKER_USER }}
-          password: ${{ env.CR_PAT }}
-      - name: Print variables
-        run: |
-          echo ${{ env.DOCKER_PASS }}
-          echo ${{ env.DOCKER_USER }}
-      - name: Login to docker
-        run: echo ${{ env.CR_PAT }} | docker login -u ${{ env.DOCKER_USER }} --password-stdin ${{ env.REGISTRY }}
+          password: ${{ env.DOCKER_PASS }}
 
-#  build:
-#    needs: unit-test
-#    runs-on: ubuntu-latest
-#    outputs:
-#      project-version-output: ${{ steps.create-project-version.outputs.PROJECT_VERSION_OUTPUT }}
-#    permissions:
-#      contents: read
-#    steps:
-#      - uses: actions/checkout@v4
-#      - name: Set up JDK 21
-#        uses: actions/setup-java@v4
-#        with:
-#          java-version: '21'
-#          distribution: 'temurin'
-#      - name: Log in to the Container registry
-#        uses: docker/login-action@v3.1.0
-#        with:
-#          registry: ${{ env.REGISTRY }}
-#          username: ${{ env.DOCKER_USER }}
-#          password: ${{ env.DOCKER_PASS }}
-#
-#      - id: create-project-version
-#        run: |
-#          FULL_SHA=${{ github.sha }}
-#          SHORT_SHA=${FULL_SHA:0:7}
-#          echo "PROJECT_VERSION=${SHORT_SHA}-${{ github.run_number }}" >> "$GITHUB_ENV"
-#          echo "PROJECT_VERSION_OUTPUT=${SHORT_SHA}-${{ github.run_number }}" >> "$GITHUB_OUTPUT"
-#
-#      - name: Build with Maven
-#        run: ./mvnw package
-#
-#      - name: Build Docker image
-#        run: |
-#          docker buildx create --use
-#          docker buildx inspect default --bootstrap
-#          docker buildx build -f src/main/docker/Dockerfile.jvm -t ${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:${{env.PROJECT_VERSION}} --load .
-#
-#      - name: Display Docker images
-#        run: docker image ls
-#
-#      - name: Push to packages
-#        run: docker push ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:${{env.PROJECT_VERSION}}
+      - id: create-project-version
+        run: |
+          FULL_SHA=${{ github.sha }}
+          SHORT_SHA=${FULL_SHA:0:7}
+          echo "PROJECT_VERSION=${SHORT_SHA}-${{ github.run_number }}" >> "$GITHUB_ENV"
+          echo "PROJECT_VERSION_OUTPUT=${SHORT_SHA}-${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+
+      - name: Build with Maven
+        run: ./mvnw package
+
+      - name: Build Docker image
+        run: |
+          docker buildx create --use
+          docker buildx inspect default --bootstrap
+          docker buildx build -f src/main/docker/Dockerfile.jvm -t ${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:${{env.PROJECT_VERSION}} --load .
+
+      - name: Display Docker images
+        run: docker image ls
+
+      - name: Push to packages
+        run: docker push ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:${{env.PROJECT_VERSION}}
