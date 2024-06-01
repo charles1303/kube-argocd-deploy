@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: my-app-container
-          image: ghcr.io/charles1303/kube-argocd-deploy:0.0.1-SNAPSHOT
+          image: ghcr.io/charles1303/kube-argocd-deploy:74b2ae3-36
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
