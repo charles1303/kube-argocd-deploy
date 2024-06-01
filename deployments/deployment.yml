@@ -16,11 +16,8 @@ spec:
       containers:
         - name: my-app-container
           image: ghcr.io/charles1303/kube-argocd-deploy:e7eb850-39
-          imagePullSecrets:
-            - name: ghcr-login-secret
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
-          imagePullPolicy: Always
       imagePullSecrets:
         - name: ghcr-login-secret
