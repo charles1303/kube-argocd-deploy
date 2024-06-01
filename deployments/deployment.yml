@@ -16,6 +16,8 @@ spec:
       containers:
         - name: my-app-container
           image: ghcr.io/charles1303/kube-argocd-deploy:74b2ae3-36
+          imagePullSecrets:
+            - name: registry-secret
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
